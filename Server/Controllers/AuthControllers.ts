@@ -20,9 +20,9 @@ export const signin=async(req:Request,res:Response,next:any)=>{
     const {email,password} =req.body
     try{
         const validUser=await User.findOne({email})
-        if(!validUser) return next(errorHandler("User not found !"))
+        if(!validUser) return res.json(errorHandler("User not found !"))
         const validPass=bcrypt.compareSync(password,validUser.password)
-        if (!validPass) return next(errorHandler("Wrong password"))
+        // if (!validPass) return next(errorHandler("Wrong password").message)
         const token=jwt.sign({_id:validUser._id}, "123rfca5dx5w") 
         const {password:pass,...rest} = validUser._doc
         res.cookie('access Token',token,{httpOnly:true}).status(200).json(rest)
